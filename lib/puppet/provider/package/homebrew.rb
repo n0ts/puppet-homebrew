@@ -58,9 +58,7 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   end
 
   def install
-    version = unversioned? ? latest : @resource[:ensure]
-
-    update_formulas if !version_defined?(version) || version == 'latest'
+    version = unversioned? ? "latest" : @resource[:ensure]
 
     if self.class.available? @resource[:name], version
       # If the desired version is already installed, just link or
@@ -85,15 +83,6 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
     end
   end
 
-  def update_formulas
-    unless self.class.const_defined?(:UPDATED_BREW)
-      notice "Updating homebrew formulas"
-
-      execute [ "brew", "update" ], command_opts
-      self.class.const_set(:UPDATED_BREW, true)
-    end
-  end
-
   def version_defined? version
     output = execute([ "brew", "info", @resource[:name] ], command_opts).strip
     defined_versions = output.lines.first.strip.split(' ')[2..-1]
@@ -110,6 +99,8 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   end
 
   def query
+    version = unversioned? ? "present" : @resource[:ensure]
+    return if version == "latest"
     return unless version = self.class.current(@resource[:name])
     { :ensure => version, :name => @resource[:name] }
   end
