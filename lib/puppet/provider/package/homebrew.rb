@@ -85,6 +85,15 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
     end
   end
 
+  def update_formulas
+    unless self.class.const_defined?(:UPDATED_BREW)
+      notice "Updating homebrew formulas"
+
+      execute [ "brew", "update" ], command_opts
+      self.class.const_set(:UPDATED_BREW, true)
+    end
+  end
+
   def version_defined? version
     output = execute([ "brew", "info", @resource[:name] ], command_opts).strip
     defined_versions = output.lines.first.strip.split(' ')[2..-1]
