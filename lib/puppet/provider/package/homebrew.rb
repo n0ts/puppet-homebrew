@@ -60,6 +60,8 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   def install
     version = unversioned? ? latest : @resource[:ensure]
 
+    update_formulas if !version_defined?(version) || version == latest
+
     if self.class.available? @resource[:name], version
       # If the desired version is already installed, just link or
       # switch. Somebody might've activated another version for
