@@ -101,7 +101,6 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   end
 
   def query
-    return if @resource[:ensure] == :latest
     return unless version = self.class.current(@resource[:name])
     { :ensure => version, :name => @resource[:name] }
   end

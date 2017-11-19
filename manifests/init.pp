@@ -68,23 +68,6 @@ class homebrew(
     require => Exec["install homebrew to ${installdir}"],
   }
 
-  # Remove the old monkey patches, from pre #39
-  file {
-    "${installdir}/Library/Homebrew/boxen-monkeypatches.rb":
-      ensure => 'absent',
-  }
-
-  # Remove the old shim for bottle hooks, from pre #75
-  file {
-    [
-      "${installdir}/Library/Homebrew/boxen-bottle-hooks.rb",
-      "${cmddir}/boxen-latest.rb",
-      "${cmddir}/boxen-install.rb",
-      "${cmddir}/boxen-upgrade.rb",
-    ]:
-      ensure => 'absent',
-  }
-
   file {
     [
       $cachedir,
@@ -105,21 +88,9 @@ class homebrew(
       source  => 'puppet:///modules/homebrew/brew-boxen-install.rb' ;
   }
 
-  ->
-  file {
-    [
-      "${boxen::config::envdir}/homebrew.sh",
-      "${boxen::config::envdir}/30_homebrew.sh",
-      "${boxen::config::envdir}/cflags.sh",
-      "${boxen::config::envdir}/ldflags.sh",
-      "${brewsdir}/cmd/brew-boxen-upgrade.rb",
-    ]:
-      ensure => absent,
-  }
-
-  ->
   boxen::env_script { 'homebrew':
     content  => template('homebrew/env.sh.erb'),
     priority => highest,
   }
 }
+

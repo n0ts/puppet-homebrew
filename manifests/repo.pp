@@ -6,8 +6,7 @@
 class homebrew::repo (
   $installdir   = $homebrew::config::installdir,
   $min_revision = $homebrew::config::min_revision,
-) {
-  require homebrew
+) inherits homebrew {
 
   if $::osfamily == 'Darwin' {
     homebrew_repo { $installdir:
