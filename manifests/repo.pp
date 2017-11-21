@@ -11,7 +11,7 @@ class homebrew::repo (
   if $::osfamily == 'Darwin' {
     homebrew_repo { $installdir:
       min_revision => $min_revision,
-      require => File[$installdir],
+      require      => File[$installdir],
     } -> Package <| |>
   }
 }
