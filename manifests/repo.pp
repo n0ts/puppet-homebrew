@@ -8,6 +8,13 @@ class homebrew::repo (
   $min_revision = $homebrew::config::min_revision,
 ) inherits homebrew {
 
+  file { $_::homebrew_root:
+    ensure => 'directory',
+    owner  => $::boxen_user,
+    group  => 'staff',
+    mode   => '0755',
+  }
+
   if $::osfamily == 'Darwin' {
     homebrew_repo { $installdir:
       min_revision => $min_revision,
