@@ -5,7 +5,7 @@ Facter.add(:homebrew_root) do
   has_weight 1
 
   setcode do
-    if File.exist? "#{Facter.value(:boxen_home)}/homebrew/bin/brew"
+    if File.exist? "#{Facter.value(:boxen_home)}"
       "#{Facter.value(:boxen_home)}/homebrew"
     else
       "/usr/local"
