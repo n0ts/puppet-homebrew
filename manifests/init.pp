@@ -18,7 +18,8 @@ class homebrew(
   include boxen::config
   include homebrew::repo
 
-  file { [$installdir,
+  file { [
+          $installdir,
           "${installdir}/bin",
           "${installdir}/etc",
           "${installdir}/include",
@@ -67,16 +68,15 @@ class homebrew(
     require => Exec["install homebrew to ${installdir}"],
   }
 
-  file {
-    [
-      $cachedir,
-      $tapsdir,
-      $cmddir,
-      "${tapsdir}/boxen",
-      $brewsdir,
-      "${brewsdir}/cmd"
-    ]:
-      ensure => 'directory' ;
+  file { [
+          $cachedir,
+          $tapsdir,
+          $cmddir,
+          "${tapsdir}/boxen",
+          $brewsdir,
+          "${brewsdir}/cmd"
+          ]:
+      ensure => 'directory';
 
     "${brewsdir}/cmd/brew-boxen-latest.rb":
       source => 'puppet:///modules/homebrew/brew-boxen-latest.rb',
