@@ -21,8 +21,6 @@ describe "homebrew" do
     should contain_file("#{dir}/Library/Taps").with_ensure('directory')
     should contain_file('/test/boxen/cache/homebrew').with_ensure('directory')
 
-    should contain_file("#{cmddir}/boxen-bottle-hooks.rb").
-      with_source('puppet:///modules/homebrew/boxen-bottle-hooks.rb')
     %w( latest install ).each do |file|
       should contain_file("#{cmddir}/brew-boxen-#{file}.rb").
         with_source("puppet:///modules/homebrew/brew-boxen-#{file}.rb").
