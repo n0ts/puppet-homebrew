@@ -137,7 +137,7 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   # environment without Bundler, if Bundler is present
   def execute(*args)
     if Puppet.features.bundled_environment?
-      Bundler.with_clean_env do
+      Bundler.with_unbundled_env do
         super
       end
     else
@@ -149,7 +149,7 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
   # environment without Bundler, if Bundler is present
   def self.execute(*args)
     if Puppet.features.bundled_environment?
-      Bundler.with_clean_env do
+      Bundler.with_unbundled_env do
         super
       end
     else
@@ -170,6 +170,11 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
     Facter.value(:boxen_user) || Facter.value(:id) || "root"
   end
 
+  def default_group
+    group = Etc.getpwnam(default_user).gid || "wheel"
+    Etc.getgrgid(group).gid
+  end
+
   def s3_host
     Facter.value(:boxen_s3_host) || 's3.amazonaws.com'
   end
@@ -178,21 +183,18 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
     Facter.value(:boxen_s3_bucket) || 'boxen-downloads'
   end
 
-  def bottle_url
-    Facter.value(:homebrew_bottle_url)
-  end
-
   def command_opts
     @command_opts ||= {
       :combine            => true,
       :custom_environment => {
-        "HOME"                      => "/#{homedir_prefix}/#{default_user}",
-        "PATH"                      => "#{self.class.home}/bin:/usr/bin:/usr/sbin:/bin:/sbin",
-        "BOXEN_HOMEBREW_BOTTLE_URL" => bottle_url,
-        "HOMEBREW_CACHE"            => self.class.cache,
+        "HOME"                    => "/#{homedir_prefix}/#{default_user}",
+        "PATH"                    => "#{self.class.home}/bin:/usr/bin:/usr/sbin:/bin:/sbin",
+        "HOMEBREW_CACHE"          => self.class.cache,
+        "HOMEBREW_NO_AUTO_UPDATE" => "1",
       },
       :failonfail         => true,
-      :uid                => default_user
+      :uid                => default_user,
+      :gid                => default_group,
     }
   end
 end

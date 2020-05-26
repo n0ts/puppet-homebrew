@@ -3,5 +3,5 @@
 # of loading Homebrew Ruby code in the Puppet process.
 #
 #   $ brew boxen-latest <formula-name>
-raise FormulaUnspecifiedError if ARGV.named.empty?
-puts ARGV.formulae.first.pkg_version
+raise FormulaUnspecifiedError if Homebrew.args.named.empty?
+puts Homebrew.args.formulae.first.pkg_version
