@@ -4,7 +4,7 @@ describe "homebrew" do
   let(:facts) { default_test_facts }
 
   let(:dir) { facts[:homebrew_root] }
-  let(:cmddir) { "#{dir}/Library/Taps/boxen/homebrew-brews/cmd" }
+  let(:cmddir) { "#{dir}/Homebrew/Library/Taps/boxen/homebrew-brews/cmd" }
 
   it do
     should contain_class('boxen::config')
@@ -13,7 +13,7 @@ describe "homebrew" do
     should contain_exec("install homebrew to #{dir}").with({
       :cwd => dir,
       :user => 'testuser',
-      :creates => "#{dir}/.git"
+      :creates => "#{dir}/Homebrew/.git"
     })
 
     should contain_file("#{dir}/lib").with_ensure('directory')

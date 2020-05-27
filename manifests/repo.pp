@@ -9,7 +9,7 @@ class homebrew::repo (
 ) inherits homebrew {
 
   if $::osfamily == 'Darwin' {
-    homebrew_repo { $installdir:
+    homebrew_repo { $repositorydir:
       min_revision => $min_revision,
       require      => Class[homebrew],
     } -> Package <| |>
