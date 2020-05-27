@@ -77,8 +77,8 @@ class homebrew(
           $brewsdir,
           "${brewsdir}/cmd"
           ]:
-      ensure => 'directory';
- }
+    ensure => 'directory';
+  }
 
   boxen::env_script { 'homebrew':
     content  => template('homebrew/env.sh.erb'),
