@@ -78,14 +78,7 @@ class homebrew(
           "${brewsdir}/cmd"
           ]:
       ensure => 'directory';
-
-    "${brewsdir}/cmd/brew-boxen-latest.rb":
-      source => 'puppet:///modules/homebrew/brew-boxen-latest.rb',
-      mode   => '0755';
-    "${brewsdir}/cmd/brew-boxen-install.rb":
-      source => 'puppet:///modules/homebrew/brew-boxen-install.rb',
-      mode   => '0755';
-  }
+ }
 
   boxen::env_script { 'homebrew':
     content  => template('homebrew/env.sh.erb'),

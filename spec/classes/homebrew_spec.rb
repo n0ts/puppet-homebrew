@@ -29,12 +29,6 @@ describe "homebrew" do
     should contain_file("#{homebrew_root}/Homebrew/Library/Taps/boxen/homebrew-brews").with_ensure('directory')
     should contain_file("#{homebrew_root}/Homebrew/Library/Taps/boxen/homebrew-brews/cmd").with_ensure('directory')
 
-    %w( latest install ).each do |file|
-      should contain_file("#{homebrew_root}/Homebrew/Library/Taps/boxen/homebrew-brews/cmd/brew-boxen-#{file}.rb").
-        with_source("puppet:///modules/homebrew/brew-boxen-#{file}.rb").
-        with_mode('0755')
-    end
-
     should contain_boxen__env_script('homebrew')
   end
 end
