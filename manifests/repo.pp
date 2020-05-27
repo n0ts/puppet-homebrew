@@ -4,9 +4,9 @@
 #
 #   include homebrew::repo
 class homebrew::repo (
-  $installdir   = $homebrew::config::installdir,
+  $repositorydir = $homebrew::config::repositorydir,
   $min_revision = $homebrew::config::min_revision,
-) inherits homebrew {
+) inherits homebrew::config {
 
   if $::osfamily == 'Darwin' {
     homebrew_repo { $repositorydir:
