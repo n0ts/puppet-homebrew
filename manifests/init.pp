@@ -4,17 +4,16 @@
 #
 #   include homebrew
 class homebrew(
-  $cachedir      = $homebrew::config::cachedir,
-  $installdir    = $homebrew::config::installdir,
-  $repositorydir = $homebrew::config::repositorydir,
-  $libdir        = $homebrew::config::libdir,
-  $cmddir        = $homebrew::config::cmddir,
-  $tapsdir       = $homebrew::config::tapsdir,
-  $brewsdir      = $homebrew::config::brewsdir,
-  $min_revision  = $homebrew::config::min_revision,
-  $repo          = 'Homebrew/brew',
-  $set_cflags    = true,
-  $set_ldflags   = true,
+  $cachedir     = $homebrew::config::cachedir,
+  $installdir   = $homebrew::config::installdir,
+  $libdir       = $homebrew::config::libdir,
+  $cmddir       = $homebrew::config::cmddir,
+  $tapsdir      = $homebrew::config::tapsdir,
+  $brewsdir     = $homebrew::config::brewsdir,
+  $min_revision = $homebrew::config::min_revision,
+  $repo         = 'Homebrew/brew',
+  $set_cflags   = true,
+  $set_ldflags  = true,
 ) inherits homebrew::config {
   include boxen::config
   include homebrew::repo
@@ -44,29 +43,28 @@ class homebrew(
           "${installdir}/share/aclocal",
           "${installdir}/var",
           "${installdir}/var/log",
-          $repositorydir,
           ]:
     ensure  => 'directory',
     owner   => $::boxen_user,
     group   => 'staff',
     mode    => '0755',
     require => undef,
-    before  => Exec["install homebrew to ${repositorydir}"],
+    before  => Exec["install homebrew to ${installdir}"],
   }
 
-  exec { "install homebrew to ${repositorydir}":
+  exec { "install homebrew to ${installdir}":
     command => "git init -q &&
                 git config remote.origin.url https://github.com/${repo} &&
                 git config remote.origin.fetch master:refs/remotes/origin/master &&
                 git fetch origin master:refs/remotes/origin/master -n &&
                 git reset --hard origin/master",
-    cwd     => $repositorydir,
+    cwd     => $installdir,
     user    => $::boxen_user,
-    creates => "${repositorydir}/.git",
+    creates => "${installdir}/.git",
   }
 
   File {
-    require => Exec["install homebrew to ${repositorydir}"],
+    require => Exec["install homebrew to ${installdir}"],
   }
 
   file { [
