@@ -159,19 +159,19 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
 
   def homedir_prefix
     case Facter[:osfamily].value
-    when "Darwin" then "Users"
-    when "Linux" then "home"
+    when 'Darwin' then 'Users'
+    when 'Linux' then 'home'
     else
-      raise "unsupported"
+      raise 'unsupported'
     end
   end
 
   def default_user
-    Facter.value(:boxen_user) || Facter.value(:id) || "root"
+    Facter.value(:boxen_user) || Facter.value(:id) || 'root'
   end
 
   def default_group
-    group = Etc.getpwnam(default_user).gid || "wheel"
+    group = Etc.getpwnam(default_user).gid || 'wheel'
     Etc.getgrgid(group).gid
   end
 
@@ -187,10 +187,11 @@ Puppet::Type.type(:package).provide :homebrew, :parent => Puppet::Provider::Pack
     @command_opts ||= {
       :combine            => true,
       :custom_environment => {
-        "HOME"                    => "/#{homedir_prefix}/#{default_user}",
-        "PATH"                    => "#{self.class.home}/bin:/usr/bin:/usr/sbin:/bin:/sbin",
-        "HOMEBREW_CACHE"          => self.class.cache,
-        "HOMEBREW_NO_AUTO_UPDATE" => "1",
+        'HOME'                    => "/#{homedir_prefix}/#{default_user}",
+        'PATH'                    => "#{self.class.home}/bin:/usr/bin:/usr/sbin:/bin:/sbin",
+        'HOMEBREW_CACHE'          => self.class.cache,
+        'HOMEBREW_NO_EMOJI'       => '1',
+        'HOMEBREW_NO_AUTO_UPDATE' => '1',
       },
       :failonfail         => true,
       :uid                => default_user,
